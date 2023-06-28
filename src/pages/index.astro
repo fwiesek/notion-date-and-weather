@@ -21,19 +21,15 @@ import Layout from '../layouts/Layout.astro';
     }
 
     const emojiList = {
-			"0": { emojiNight: "🌚", emojiDay: "😎" },
-			"1": { emojiNight: "🌑", emojiDay: "🌤" },
-			"2": { emojiNight: "🌑", emojiDay: "🌤" },
-			"3": { emojiNight: "🌑", emojiDay: "🌤" },
-			"45": { emoji: "🌫" },
-			"48": { emoji: "🌫" },
-			"51": { emoji: "🌧️" },
-			"53": { emoji: "🌧️" },
-			"55": { emoji: "🌧️" },
-			"10": { emoji: "" },
-			"11": { emoji: "😱" },
-			"13": { emoji: "⛷" },
-			"50": { emoji: "👻" }
+			"0": "😎",
+			"1": "🌤",
+			"2": "🌤",
+			"3": "🌤",
+			"45": "🌫",
+			"48": "🌫",
+			"51": "🌧️",
+			"53": "🌧️",
+			"55": "🌧️",
 		}
 
     let dateElement = document.getElementById("date");
@@ -59,8 +55,8 @@ import Layout from '../layouts/Layout.astro';
     }
     if (weatherElement !== null) {
         const weatherData = await getWeather();
-        console.log(weatherData);
-        weatherElement.innerHTML = weatherData.temperature + '°C';
+        const emoji = emojiList[`${weatherData.weathercode}`];
+        weatherElement.innerHTML = weatherData.temperature + '°C ' + emoji;
     }
 
     let interval = setInterval(() => updateTime(timeElement), 1000);
