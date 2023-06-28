@@ -11,6 +11,31 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
+    interface CurrentWeather {
+        temperature:   number;
+        windspeed:     number;
+        winddirection: number;
+        weathercode:   number;
+        is_day:        number;
+        time:          string;
+    }
+
+    const emojiList = {
+			"0": { emojiNight: "🌚", emojiDay: "😎" },
+			"1": { emojiNight: "🌑", emojiDay: "🌤" },
+			"2": { emojiNight: "🌑", emojiDay: "🌤" },
+			"3": { emojiNight: "🌑", emojiDay: "🌤" },
+			"45": { emoji: "🌫" },
+			"48": { emoji: "🌫" },
+			"51": { emoji: "🌧️" },
+			"53": { emoji: "🌧️" },
+			"55": { emoji: "🌧️" },
+			"10": { emoji: "" },
+			"11": { emoji: "😱" },
+			"13": { emoji: "⛷" },
+			"50": { emoji: "👻" }
+		}
+
     let dateElement = document.getElementById("date");
     let timeElement = document.getElementById("time");
     let weatherElement = document.getElementById("weather");
@@ -22,13 +47,22 @@ import Layout from '../layouts/Layout.astro';
         time.innerHTML = new Date().toLocaleTimeString("fr-FR");
     };
 
+    async function getWeather(): Promise<CurrentWeather> {
+        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=47.32&longitude=5.02&hourly=temperature_2m,precipitation&current_weather=true&forecast_days=1');
+        const currentWeather: CurrentWeather = (await response.json())?.current_weather;
+        return currentWeather;
+    }
+
     if (dateElement !== null) {
         let date = new Date().toLocaleDateString("fr-FR", { weekday: 'long', month: 'long', year: 'numeric', day: 'numeric' });
         dateElement.innerHTML = date;
     }
     if (weatherElement !== null) {
-        weatherElement.innerHTML = "🌞";
+        const weatherData = await getWeather();
+        console.log(weatherData);
+        weatherElement.innerHTML = weatherData.temperature + '°C';
     }
 
     let interval = setInterval(() => updateTime(timeElement), 1000);
+    await getWeather();
 </script>
